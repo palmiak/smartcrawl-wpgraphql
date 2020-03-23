@@ -10,14 +10,15 @@
         {
             "name": "Maciej Palmowski",
             "email": "m.palmowski@freshpixels.pl"
-        },
+        }
     ],
     "autoload": {
         "files": [
           "src/post_seo.php",
           "src/social.php",
           "src/twitter.php",
-          "src/opengraph.php"
+          "src/opengraph.php",
+          "src/options.php"
         ]
     },
     "require-dev": {

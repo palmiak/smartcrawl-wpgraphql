@@ -1,12 +1,16 @@
 <?php
 class PostSeo {
-	public function __construct( $id = null ) {
+	public $post_type;
+
+	public function __construct( $id = null, $post_type ) {
 		if ( $id === null ) {
 			global $post;
 			$this->post_id = $post->ID;
 		} else {
 			$this->post_id = $id;
 		}
+
+		$this->post_type = $post_type;
 	}
 
 	public function get_title() {
@@ -31,14 +35,18 @@ class PostSeo {
 	 * @todo check global options
 	 */
 	public function get_robots_noindex() {
-		return smartcrawl_get_value( 'meta-robots-noindex', $this->post_id ) ? 'noindex' : 'index';
+		$options = Options::get_instance();
+
+		return $options->get_index();
 	}
 
 	/**
 	 * @todo check global options
 	 */
 	public function get_robots_nofollow() {
-		return smartcrawl_get_value( 'meta-robots-nofollow', $this->post_id ) ? 'nofollow' : 'follow';
+		$options = Options::get_instance();
+
+		return $options->get_follow();
 	}
 
 	public function get_canonical() {
