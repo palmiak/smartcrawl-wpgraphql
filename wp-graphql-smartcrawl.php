@@ -1,0 +1,121 @@
+<?php
+
+/**
+ * Plugin Name:     WP GraphQL Smartcrawl
+ * Plugin URI:
+ * Description:     A WPGraphQL Extension that adds support for Smartcrawl
+ * Author:          Maciek Palmowski
+ * Author URI:
+ * Text Domain:     wp-graphql-smartcrawl
+ * Domain Path:     /languages
+ * Version:         1.0.0
+ *
+ * @package         WP_Graphql_Smartcrawl
+ */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit();
+}
+
+use WPGraphQL\AppContext;
+use WPGraphQL\Data\DataSource;
+
+require 'src/post_seo.php';
+require 'src/social.php';
+require 'src/twitter.php';
+require 'src/opengraph.php';
+
+class WP_Graphql_Smartcrawl {
+	public function __construct() {
+		add_action(
+			'graphql_register_types',
+			array( $this, 'init' )
+		);
+	}
+
+	public function init() {
+		$post_types = \WPGraphQL::get_allowed_post_types();
+		//$taxonomies = \WPGraphQL::get_allowed_taxonomies();
+
+		register_graphql_object_type(
+			'SEO',
+			array(
+				'fields' => array(
+					'title'                => array( 'type' => 'String' ),
+					'metaDesc'             => array( 'type' => 'String' ),
+					'metaRobotsNoindex'    => array( 'type' => 'String' ),
+					'metaRobotsNofollow'   => array( 'type' => 'String' ),
+					'opengraphTitle'       => array( 'type' => 'String' ),
+					'opengraphDescription' => array( 'type' => 'String' ),
+					'opengraphImage'       => array( 'type' => array( 'list_of' => 'MediaItem' ) ),
+					'canonical'            => array( 'type' => 'String' ),
+					'twitterCard'          => array( 'type' => 'String' ),
+					'twitterTitle'         => array( 'type' => 'String' ),
+					'twitterDescription'   => array( 'type' => 'String' ),
+					'twitterImage'         => array( 'type' => 'MediaItem' ),
+
+				),
+			)
+		);
+
+		if ( ! empty( $post_types ) && is_array( $post_types ) ) {
+			foreach ( $post_types as $post_type ) {
+				$post_type_object = get_post_type_object( $post_type );
+
+				if ( isset( $post_type_object->graphql_single_name ) ) :
+					register_graphql_field(
+						$post_type_object->graphql_single_name,
+						'smartcrawl_seo',
+						array(
+							'type'        => 'SEO',
+							'description' => __( 'The Smartcrawl data of the ' . $post_type_object->graphql_single_name, 'wp-graphql' ),
+							'resolve'     => function ( $post, array $args, AppContext $context ) {
+								// Base array
+								$seo = array();
+
+								query_posts(
+									array(
+										'p'         => $post->ID,
+										'post_type' => 'any',
+									)
+								);
+								the_post();
+
+								$post_seo = new PostSeo();
+								$twitter = new Twitter();
+								$opengraph = new Opengraph();
+
+								// Get data
+								$seo = array(
+									'title'                => $post_seo->get_title(),
+									'metaDesc'             => $post_seo->get_description(),
+									'metaRobotsNoindex'    => $post_seo->get_robots_noindex(),
+									'metaRobotsNofollow'   => $post_seo->get_robots_nofollow(),
+									'opengraphTitle'       => $opengraph->get_title( $post_seo->get_title() ),
+									'opengraphDescription' => $opengraph->get_description( $post_seo->get_description() ),
+									'opengraphImage'       => $opengraph->get_images(),
+									'canonical'            => $post_seo->get_canonical(),
+									'twitterTitle'         => $twitter->get_title( $post_seo->get_title() ),
+									'twitterDescription'   => $twitter->get_description( $post_seo->get_description() ),
+									'twitterImage'         => $twitter->get_images(),
+
+								);
+								wp_reset_query();
+								$twitter->clear_data();
+								$opengraph->clear_data();
+
+								return ! empty( $seo ) ? $seo : null;
+							},
+						)
+					);
+			  endif;
+			}
+		}
+	}
+}
+
+add_action(
+	'init',
+	function() {
+		new WP_Graphql_Smartcrawl();
+	}
+);
