@@ -5,7 +5,7 @@ abstract class Social {
 	var $meta_field;
 	var $post_id;
 
-	function get_title( $title = '' ) {
+	public function get_title( $title = '' ) {
 		if ( $this->is_disabled() ) {
 			return '';
 		}
@@ -13,7 +13,7 @@ abstract class Social {
 		return ! empty( $this->data['title'] ) ? $this->data['title'] : $title;
 	}
 
-	function get_description( $description = '' ) {
+	public function get_description( $description = '' ) {
 		if ( $this->is_disabled() ) {
 			return '';
 		}
@@ -22,14 +22,14 @@ abstract class Social {
 
 	}
 
-	function get_data() {
+	public function get_data() {
 		if ( empty( $this->data ) ) {
 			$this->set_data( $this->post_id );
 		}
 		return $this->data;
 	}
 
-	function set_data() {
+	public function set_data() {
 		if ( empty( $this->data ) ) {
 			$data = get_post_meta( $this->post_id, $this->meta_field, true );
 
@@ -46,11 +46,11 @@ abstract class Social {
 		return false;
 	}
 
-	function clear_data() {
+	public function clear_data() {
 		$this->data = null;
 	}
 
-	function is_disabled() {
+	public function is_disabled() {
 		if ( isset( $this->data['disabled'] ) && $this->data['disabled'] ) {
 			return true;
 		} else {

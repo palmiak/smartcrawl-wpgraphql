@@ -1,7 +1,7 @@
 <?php
 class Opengraph extends Social {
 	public function __construct( $id = null ) {
-		if ( $id == null ) {
+		if ( $id === null ) {
 			global $post;
 			$this->post_id = $post->ID;
 		} else {
@@ -11,7 +11,7 @@ class Opengraph extends Social {
 		$this->set_data();
 	}
 
-	function get_images() {
+	public function get_images() {
 		if ( $this->is_disabled() ) {
 			return null;
 		}

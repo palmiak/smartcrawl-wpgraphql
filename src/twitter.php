@@ -1,7 +1,7 @@
 <?php
 class Twitter extends Social {
 	public function __construct( $id = null ) {
-		if ( $id == null ) {
+		if ( $id === null ) {
 			global $post;
 			$this->post_id = $post->ID;
 		} else {
@@ -9,10 +9,10 @@ class Twitter extends Social {
 		}
 		$this->meta_field = '_wds_twitter';
 		$this->set_data();
-    }
+	}
 
-    function get_images() {
-        if ( $this->is_disabled() ) {
+	public function get_images() {
+		if ( $this->is_disabled() ) {
 			return null;
 		}
 
@@ -28,5 +28,5 @@ class Twitter extends Social {
 		} else {
 			return null;
 		}
-    }
+	}
 }

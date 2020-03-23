@@ -2,27 +2,24 @@
 
 /**
  * Plugin Name:     WP GraphQL Smartcrawl
- * Plugin URI:
+ * Plugin URI:      https://github.com/wp-graphql/wp-graphql
  * Description:     A WPGraphQL Extension that adds support for Smartcrawl
  * Author:          Maciek Palmowski
  * Author URI:
  * Text Domain:     wp-graphql-smartcrawl
  * Domain Path:     /languages
- * Version:         1.0.0
+ * Version:         0.1.0
  *
  * @package         WP_Graphql_Smartcrawl
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-use WPGraphQL\AppContext;
-use WPGraphQL\Data\DataSource;
+require __DIR__ . '/vendor/autoload.php';
 
-require 'src/post_seo.php';
-require 'src/social.php';
-require 'src/twitter.php';
-require 'src/opengraph.php';
+use WPGraphQL\AppContext;
 
 class WP_Graphql_Smartcrawl {
 	public function __construct() {
@@ -34,7 +31,7 @@ class WP_Graphql_Smartcrawl {
 
 	public function init() {
 		$post_types = \WPGraphQL::get_allowed_post_types();
-		//$taxonomies = \WPGraphQL::get_allowed_taxonomies();
+		// $taxonomies = \WPGraphQL::get_allowed_taxonomies();
 
 		register_graphql_object_type(
 			'SEO',
@@ -67,7 +64,7 @@ class WP_Graphql_Smartcrawl {
 						'smartcrawl_seo',
 						array(
 							'type'        => 'SEO',
-							'description' => __( 'The Smartcrawl data of the ' . $post_type_object->graphql_single_name, 'wp-graphql' ),
+							'description' => __( 'The Smartcrawl data of the SmartCrawl ', 'wp-graphql' ),
 							'resolve'     => function ( $post, array $args, AppContext $context ) {
 								// Base array
 								$seo = array();

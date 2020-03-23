@@ -1,0 +1,27 @@
+{
+    "name": "palmiak/smartcrawl-wpgraphql",
+    "description": "A WPGraphQL extension for SmartCrawl.",
+    "keywords": ["wordpress", "wpgraphql", "smartcrawl"],
+    "require": {
+        "php": ">=5.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maciej Palmowski",
+            "email": "m.palmowski@freshpixels.pl"
+        },
+    ],
+    "autoload": {
+        "files": [
+          "src/post_seo.php",
+          "src/social.php",
+          "src/twitter.php",
+          "src/opengraph.php"
+        ]
+    },
+    "require-dev": {
+        "wp-coding-standards/wpcs": "2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "0.5.0"
+    }
+}
