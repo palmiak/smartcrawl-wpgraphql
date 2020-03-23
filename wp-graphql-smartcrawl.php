@@ -77,7 +77,10 @@ class WP_Graphql_Smartcrawl {
 								);
 								the_post();
 
-								$post_seo = new PostSeo();
+								$options = Options::get_instance();
+								$options->set_follow_index_data();
+
+								$post_seo = new PostSeo( null, $post->post_type );
 								$twitter = new Twitter();
 								$opengraph = new Opengraph();
 
@@ -99,12 +102,13 @@ class WP_Graphql_Smartcrawl {
 								wp_reset_query();
 								$twitter->clear_data();
 								$opengraph->clear_data();
+								$options->clear_data();
 
 								return ! empty( $seo ) ? $seo : null;
 							},
 						)
 					);
-			  endif;
+				endif;
 			}
 		}
 	}
