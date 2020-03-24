@@ -9,6 +9,7 @@ class Opengraph extends Social {
 		}
 		$this->meta_field = '_wds_opengraph';
 		$this->set_data();
+		$this->set_helper();
 	}
 
 	public function get_images() {
@@ -16,8 +17,9 @@ class Opengraph extends Social {
 			return null;
 		}
 
-		if ( ! empty( $this->data['images'] ) && is_array( $this->data['images'] ) ) {
-			foreach ( $this->data['images'] as $image ) {
+		$images = $this->helper->get_images();
+		if ( ! empty( $images ) && is_array( $images ) ) {
+			foreach ( $images as $image ) {
 				$object            = new stdClass();
 				$object->sourceUrl = $image;
 
@@ -28,5 +30,17 @@ class Opengraph extends Social {
 		} else {
 			return null;
 		}
+	}
+
+	public function set_helper() {
+		$obj = Smartcrawl_OpenGraph_Printer::get();
+		$helper     = new Smartcrawl_OpenGraph_Value_Helper();
+		$this->helper = $helper;
+
+		return true;
+	}
+
+	public function is_disabled() {
+	 	return ! $this->helper->is_enabled();
 	}
 }

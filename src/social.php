@@ -4,6 +4,7 @@ abstract class Social {
 	var $data;
 	var $meta_field;
 	var $post_id;
+	var $helper;
 
 	public function get_title( $title = '' ) {
 		if ( $this->is_disabled() ) {
@@ -24,7 +25,7 @@ abstract class Social {
 
 	public function get_data() {
 		if ( empty( $this->data ) ) {
-			$this->set_data( $this->post_id );
+			$this->set_data();
 		}
 		return $this->data;
 	}
@@ -48,6 +49,7 @@ abstract class Social {
 
 	public function clear_data() {
 		$this->data = null;
+		$this->helper = null;
 	}
 
 	public function is_disabled() {

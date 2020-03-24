@@ -9,6 +9,7 @@ class Twitter extends Social {
 		}
 		$this->meta_field = '_wds_twitter';
 		$this->set_data();
+		$this->set_helper();
 	}
 
 	public function get_images() {
@@ -16,17 +17,19 @@ class Twitter extends Social {
 			return null;
 		}
 
-		if ( ! empty( $this->data['images'] ) && is_array( $this->data['images'] ) ) {
-			foreach ( $this->data['images'] as $image ) {
-				$object            = new stdClass();
-				$object->sourceUrl = $image;
+		$image = $this->helper->get_image_content();
 
-				$ret = $object;
-			}
-
-			return $ret;
+		if ( ! empty( $image ) ) {
+			$object            = new stdClass();
+			$object->sourceUrl = $image;
+			return $object;
 		} else {
 			return null;
 		}
 	}
+
+	public function set_helper() {
+		$this->helper = Smartcrawl_Twitter_Printer::get();
+	}
+
 }
