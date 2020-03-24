@@ -1,12 +1,15 @@
 <?php
 class Opengraph extends Social {
-	public function __construct( $id = null ) {
-		if ( $id === null ) {
+	public function __construct( $object = null ) {
+		if ( $object === null ) {
 			global $post;
-			$this->post_id = $post->ID;
+			$this->object = $post;
 		} else {
-			$this->post_id = $id;
+			$this->object = $object;
 		}
+
+		$this->post_id = $post->ID;
+
 		$this->meta_field = '_wds_opengraph';
 		$this->set_data();
 		$this->set_helper();

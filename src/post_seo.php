@@ -2,15 +2,15 @@
 class PostSeo {
 	public $post_type;
 
-	public function __construct( $id = null, $post_type ) {
+	public function __construct( $object = null ) {
 		if ( $id === null ) {
 			global $post;
-			$this->post_id = $post->ID;
+			$this->object = $post;
 		} else {
-			$this->post_id = $id;
+			$this->object = $object;
 		}
 
-		$this->post_type = $post_type;
+		$this->post_type = $object->post_type;
 	}
 
 	public function get_title() {

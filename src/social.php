@@ -5,6 +5,7 @@ abstract class Social {
 	var $meta_field;
 	var $post_id;
 	var $helper;
+	var $object;
 
 	public function get_title( $title = '' ) {
 		if ( $this->is_disabled() ) {

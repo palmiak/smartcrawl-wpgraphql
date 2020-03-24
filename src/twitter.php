@@ -1,12 +1,14 @@
 <?php
 class Twitter extends Social {
-	public function __construct( $id = null ) {
-		if ( $id === null ) {
+	public function __construct( $object = null ) {
+		if ( $object === null ) {
 			global $post;
-			$this->post_id = $post->ID;
+			$this->object = $post;
 		} else {
-			$this->post_id = $id;
+			$this->object = $object;
 		}
+
+		$this->post_id = $post->ID;
 		$this->meta_field = '_wds_twitter';
 		$this->set_data();
 		$this->set_helper();
@@ -32,4 +34,15 @@ class Twitter extends Social {
 		$this->helper = Smartcrawl_Twitter_Printer::get();
 	}
 
+	public function is_disabled() {
+		$options = Options::get_instance();
+		$key = 'twitter-active-' . $this->object->post_type;
+
+		$disabled_by_post = isset( $this->data['disabled'] ) && $this->data['disabled'];
+		$disabled_by_type = ! $options->get( $key );
+		$disabled_globally = empty( $options->get( 'twitter-card-enable' ) );
+
+
+		return $disabled_by_post || $disabled_by_type || $disabled_globally;
+	}
 }
