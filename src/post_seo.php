@@ -31,18 +31,12 @@ class PostSeo {
 		);
 	}
 
-	/**
-	 * @todo check global options
-	 */
 	public function get_robots_noindex() {
 		$options = Options::get_instance();
 
 		return $options->get_index();
 	}
 
-	/**
-	 * @todo check global options
-	 */
 	public function get_robots_nofollow() {
 		$options = Options::get_instance();
 
@@ -53,5 +47,9 @@ class PostSeo {
 		$helper = new Smartcrawl_Canonical_Value_Helper();
 
 		return $helper->get_canonical();
+	}
+
+	public function get_focus_keywords() {
+		return implode( ' ', Smartcrawl_Meta_Value_Helper::get()->get_focus_keywords() );
 	}
 }

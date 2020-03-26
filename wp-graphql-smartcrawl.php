@@ -23,7 +23,7 @@ use WPGraphQL\AppContext;
 
 class WP_Graphql_Smartcrawl {
 	public function __construct() {
-		if ( !( class_exists( 'Smartcrawl_Loader' ) && class_exists( 'WPGraphQL' ) ) ) {
+		if ( ! ( class_exists( 'Smartcrawl_Loader' ) && class_exists( 'WPGraphQL' ) ) ) {
 			add_action( 'admin_init', array( $this, 'plugin_deactivate' ) );
 			add_action( 'admin_notices', array( $this, 'admin_notice' ) );
 		}
@@ -64,6 +64,7 @@ class WP_Graphql_Smartcrawl {
 					'twitterTitle'         => array( 'type' => 'String' ),
 					'twitterDescription'   => array( 'type' => 'String' ),
 					'twitterImage'         => array( 'type' => 'MediaItem' ),
+					'focusKeywords'        => array( 'type' => 'String' ),
 
 				),
 			)
@@ -112,6 +113,7 @@ class WP_Graphql_Smartcrawl {
 									'twitterTitle'         => $twitter->get_title( $post_seo->get_title() ),
 									'twitterDescription'   => $twitter->get_description( $post_seo->get_description() ),
 									'twitterImage'         => $twitter->get_images(),
+									'focusKeywords'        => $post_seo->get_focus_keywords(),
 
 								);
 								wp_reset_query();
