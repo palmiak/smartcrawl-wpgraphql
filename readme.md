@@ -29,6 +29,8 @@ query GET_POSTS {
           twitterImage {
             sourceUrl
           }
+          twitterCard
+          focusKeywords
         }
       }
     }

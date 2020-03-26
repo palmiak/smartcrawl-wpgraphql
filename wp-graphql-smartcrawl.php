@@ -64,6 +64,7 @@ class WP_Graphql_Smartcrawl {
 					'twitterTitle'         => array( 'type' => 'String' ),
 					'twitterDescription'   => array( 'type' => 'String' ),
 					'twitterImage'         => array( 'type' => 'MediaItem' ),
+					'twitterCard'          => array( 'type' => 'String' ),
 					'focusKeywords'        => array( 'type' => 'String' ),
 
 				),
@@ -113,6 +114,7 @@ class WP_Graphql_Smartcrawl {
 									'twitterTitle'         => $twitter->get_title( $post_seo->get_title() ),
 									'twitterDescription'   => $twitter->get_description( $post_seo->get_description() ),
 									'twitterImage'         => $twitter->get_images(),
+									'twitterCard'          => $twitter->get_card_type(),
 									'focusKeywords'        => $post_seo->get_focus_keywords(),
 
 								);

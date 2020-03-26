@@ -16,7 +16,7 @@ class Twitter extends Social {
 
 	public function get_images() {
 		if ( $this->is_disabled() ) {
-			return null;
+			return '';
 		}
 
 		$image = $this->helper->get_image_content();
@@ -44,5 +44,12 @@ class Twitter extends Social {
 
 
 		return $disabled_by_post || $disabled_by_type || $disabled_globally;
+	}
+
+	public function get_card_type() {
+		if ( $this->is_disabled() ) {
+			return '';
+		}
+		return Smartcrawl_Twitter_Printer::get()->get_card_content();
 	}
 }
