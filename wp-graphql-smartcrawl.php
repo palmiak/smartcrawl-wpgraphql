@@ -23,10 +23,25 @@ use WPGraphQL\AppContext;
 
 class WP_Graphql_Smartcrawl {
 	public function __construct() {
+		if ( !( class_exists( 'Smartcrawl_Loader' ) && class_exists( 'WPGraphQL' ) ) ) {
+			add_action( 'admin_init', array( $this, 'plugin_deactivate' ) );
+			add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+		}
+
 		add_action(
 			'graphql_register_types',
 			array( $this, 'init' )
 		);
+	}
+
+	public function admin_notice() {
+		echo '<div class="updated">
+			<p><strong>WP GraphQL SmartCrawl</strong> requires SmartCrawl or SmartCrawl Pro and WP GraphQL to run. Therfore the plugin has been disabled.</p>
+		</div>';
+	}
+
+	function plugin_deactivate() {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
 	}
 
 	public function init() {
