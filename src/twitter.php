@@ -1,15 +1,17 @@
 <?php
 class Twitter extends Social {
-	public function __construct( $object = null ) {
-		if ( $object === null ) {
-			global $post;
-			$this->object = $post;
+	public function __construct( $object, $type = 'post_type' ) {
+		if ( $type === 'post_type' ) {
+			$this->object = $object;
+			$this->id     = $this->object->ID;
 		} else {
 			$this->object = $object;
+			$this->id     = $this->object->term_id;
 		}
 
-		$this->post_id = $post->ID;
-		$this->meta_field = '_wds_twitter';
+		$this->type        = $type;
+		$this->meta_field  = '_wds_twitter';
+		$this->social_meta = 'twitter';
 		$this->set_data();
 		$this->set_helper();
 	}
@@ -36,14 +38,18 @@ class Twitter extends Social {
 
 	public function is_disabled() {
 		$options = Options::get_instance();
-		$key = 'twitter-active-' . $this->object->post_type;
 
-		$disabled_by_post = isset( $this->data['disabled'] ) && $this->data['disabled'];
-		$disabled_by_type = ! $options->get( $key );
+		if ( $this->type === 'post_type' ) {
+			$key = 'twitter-active-' . trim( $this->object->post_type );
+		} else {
+			$key = 'twitter-active-' . trim( $this->object->taxonomy );
+		}
+
+		$disabled_by_type  = ! $options->get( $key );
+		$disabled_by_entry = isset( $this->data['disabled'] ) && $this->data['disabled'];
 		$disabled_globally = empty( $options->get( 'twitter-card-enable' ) );
 
-
-		return $disabled_by_post || $disabled_by_type || $disabled_globally;
+		return $disabled_by_entry || $disabled_by_type || $disabled_globally;
 	}
 
 	public function get_card_type() {
@@ -51,5 +57,19 @@ class Twitter extends Social {
 			return '';
 		}
 		return Smartcrawl_Twitter_Printer::get()->get_card_content();
+	}
+
+	public function get_title() {
+		if ( $this->is_disabled() ) {
+			return '';
+		}
+		return $this->helper->get_title_content();
+	}
+
+	public function get_description() {
+		if ( $this->is_disabled() ) {
+			return '';
+		}
+		return $this->helper->get_description_content();
 	}
 }

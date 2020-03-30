@@ -46,7 +46,7 @@ class WP_Graphql_Smartcrawl {
 
 	public function init() {
 		$post_types = \WPGraphQL::get_allowed_post_types();
-		// $taxonomies = \WPGraphQL::get_allowed_taxonomies();
+		$taxonomies = \WPGraphQL::get_allowed_taxonomies();
 
 		register_graphql_object_type(
 			'SEO',
@@ -81,7 +81,7 @@ class WP_Graphql_Smartcrawl {
 						'smartcrawl_seo',
 						array(
 							'type'        => 'SEO',
-							'description' => __( 'The Smartcrawl data of the SmartCrawl ', 'wp-graphql' ),
+							'description' => __( 'The Smartcrawl data of ' . $post_type, 'wp-graphql' ),
 							'resolve'     => function ( $post, array $args, AppContext $context ) {
 								// Base array
 								$seo = array();
@@ -97,8 +97,8 @@ class WP_Graphql_Smartcrawl {
 								$options = Options::get_instance();
 								$options->set_follow_index_data();
 
-								$post_seo = new PostSeo( null, $post->post_type );
-								$twitter = new Twitter();
+								$post_seo = new PostSeo( $post, 'post_type' );
+								$twitter = new Twitter( $post, 'post_type' );
 								$opengraph = new Opengraph();
 
 								// Get data
@@ -128,6 +128,75 @@ class WP_Graphql_Smartcrawl {
 						)
 					);
 				endif;
+			}
+		}
+
+		if ( ! empty( $taxonomies ) && is_array( $taxonomies ) ) {
+			foreach ( $taxonomies as $tax ) {
+
+				$taxonomy = get_taxonomy( $tax );
+
+				if ( empty( $taxonomy ) || ! isset( $taxonomy->graphql_single_name ) ) {
+					return;
+				}
+
+				register_graphql_field(
+					$taxonomy->graphql_single_name,
+					'smartcrawl_seo',
+					[
+						'type'        => 'SEO',
+						'description' => __(' The Smartcrawl data of ' . $taxonomy->label, 'wp-graphql' ),
+						'resolve'     => function ( $term, array $args, AppContext $context ) {
+
+							$term_obj = get_term( $term->term_id );
+
+							query_posts(
+								array(
+									'tax_query' => array(
+										array(
+											'taxonomy' => $term_obj->taxonomy,
+											'terms'    => $term_obj->term_id,
+											'field'    => 'term_id',
+										),
+									),
+								)
+							);
+							the_post();
+
+							$options = Options::get_instance();
+							$options->set_follow_index_data();
+
+							$post_seo  = new PostSeo( $term_obj, 'taxonomy' );
+							$twitter   = new Twitter( $term_obj, 'taxonomy' );
+							$opengraph = new Opengraph();
+
+							// Get data
+							$seo = array(
+								'title'                => $post_seo->get_title(),
+								'metaDesc'             => $post_seo->get_description(),
+								'metaRobotsNoindex'    => $post_seo->get_robots_noindex(),
+								'metaRobotsNofollow'   => $post_seo->get_robots_nofollow(),
+								'opengraphTitle'       => $opengraph->get_title( $post_seo->get_title() ),
+								'opengraphDescription' => $opengraph->get_description( $post_seo->get_description() ),
+								'opengraphImage'       => $opengraph->get_images(),
+								'canonical'            => $post_seo->get_canonical(),
+								'twitterTitle'         => $twitter->get_title( $post_seo->get_title() ),
+								'twitterDescription'   => $twitter->get_description( $post_seo->get_description() ),
+								'twitterImage'         => $twitter->get_images(),
+								'twitterCard'          => $twitter->get_card_type(),
+								'focusKeywords'        => $post_seo->get_focus_keywords(),
+							);
+							wp_reset_query();
+							$twitter->clear_data();
+							$opengraph->clear_data();
+							$options->clear_data();
+
+							wp_reset_query();
+
+							return ! empty( $seo ) ? $seo : null;
+						},
+					]
+				);
 			}
 		}
 	}

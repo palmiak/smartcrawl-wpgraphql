@@ -18,10 +18,10 @@ class Options {
 	}
 
 	public function get( $key ) {
-		if ( isset( $this->options[ $key ] ) && $this->options[ $key ] ) {
+		if ( isset( $this->options[ $key ] ) ) {
 			return $this->options[ $key ];
 		} else {
-			return null;
+			return '';
 		}
 	}
 

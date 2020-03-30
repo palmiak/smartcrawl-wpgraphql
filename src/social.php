@@ -3,26 +3,10 @@
 abstract class Social {
 	var $data;
 	var $meta_field;
-	var $post_id;
+	var $id;
 	var $helper;
 	var $object;
-
-	public function get_title( $title = '' ) {
-		if ( $this->is_disabled() ) {
-			return '';
-		}
-
-		return ! empty( $this->data['title'] ) ? $this->data['title'] : $title;
-	}
-
-	public function get_description( $description = '' ) {
-		if ( $this->is_disabled() ) {
-			return '';
-		}
-
-		return ! empty( $data['description'] ) ? $data['description'] : $description;
-
-	}
+	var $type;
 
 	public function get_data() {
 		if ( empty( $this->data ) ) {
@@ -33,7 +17,11 @@ abstract class Social {
 
 	public function set_data() {
 		if ( empty( $this->data ) ) {
-			$data = get_post_meta( $this->post_id, $this->meta_field, true );
+			if ( $post_type === 'post_type' ) {
+				$data = get_post_meta( $this->id, $this->meta_field, true );
+			} else {
+				$data = smartcrawl_get_term_meta( $this->object, $this->object->taxonomy, $this->social_meta );
+			}
 
 			if ( isset( $data['disabled'] ) && $data['disabled'] ) {
 				$this->data = array( 'disabled' => true );
@@ -44,12 +32,11 @@ abstract class Social {
 			return true;
 		}
 
-		$this->data = array( 'disabled' => true );
 		return false;
 	}
 
 	public function clear_data() {
-		$this->data = null;
+		$this->data   = null;
 		$this->helper = null;
 	}
 

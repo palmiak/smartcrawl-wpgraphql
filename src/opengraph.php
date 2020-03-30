@@ -1,14 +1,18 @@
 <?php
 class Opengraph extends Social {
-	public function __construct( $object = null ) {
+	public function __construct( $object = null, $type = 'post_type' ) {
 		if ( $object === null ) {
-			global $post;
-			$this->object = $post;
+			if ( $type === 'post_type' ) {
+				global $post;
+				$this->object = $post;
+			} else {
+
+			}
 		} else {
 			$this->object = $object;
 		}
 
-		$this->post_id = $post->ID;
+		$this->id = $post->ID;
 
 		$this->meta_field = '_wds_opengraph';
 		$this->set_data();
@@ -36,14 +40,28 @@ class Opengraph extends Social {
 	}
 
 	public function set_helper() {
-		$obj = Smartcrawl_OpenGraph_Printer::get();
-		$helper     = new Smartcrawl_OpenGraph_Value_Helper();
+		$obj          = Smartcrawl_OpenGraph_Printer::get();
+		$helper       = new Smartcrawl_OpenGraph_Value_Helper();
 		$this->helper = $helper;
 
 		return true;
 	}
 
 	public function is_disabled() {
-	 	return ! $this->helper->is_enabled();
+		return ! $this->helper->is_enabled();
+	}
+
+	public function get_title() {
+		if ( $this->is_disabled() ) {
+			return '';
+		}
+		return $this->helper->get_title();
+	}
+
+	public function get_description() {
+		if ( $this->is_disabled() ) {
+			return '';
+		}
+		return $this->helper->get_description();
 	}
 }
