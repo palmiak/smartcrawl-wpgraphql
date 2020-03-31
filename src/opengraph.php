@@ -1,20 +1,18 @@
 <?php
 class Opengraph extends Social {
 	public function __construct( $object = null, $type = 'post_type' ) {
-		if ( $object === null ) {
-			if ( $type === 'post_type' ) {
-				global $post;
-				$this->object = $post;
-			} else {
+		$this->object = $object;
 
-			}
-		} else {
-			$this->object = $object;
+		if ( $type === 'post_type' ) {
+			$this->id     = $this->object->ID;
+		} elseif( $type === 'taxonomy' ) {
+			$this->id     = $this->object->term_id;
 		}
 
-		$this->id = $post->ID;
+		$this->type        = $type;
 
 		$this->meta_field = '_wds_opengraph';
+		$this->social_meta = 'opengraph';
 		$this->set_data();
 		$this->set_helper();
 	}

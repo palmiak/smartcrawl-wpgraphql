@@ -1,11 +1,11 @@
 <?php
 class Twitter extends Social {
 	public function __construct( $object, $type = 'post_type' ) {
+		$this->object = $object;
+
 		if ( $type === 'post_type' ) {
-			$this->object = $object;
 			$this->id     = $this->object->ID;
-		} else {
-			$this->object = $object;
+		} elseif( $type === 'taxonomy' ) {
 			$this->id     = $this->object->term_id;
 		}
 

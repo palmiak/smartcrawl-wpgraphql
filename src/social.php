@@ -17,9 +17,9 @@ abstract class Social {
 
 	public function set_data() {
 		if ( empty( $this->data ) ) {
-			if ( $post_type === 'post_type' ) {
+			if ( $this->type === 'post_type' ) {
 				$data = get_post_meta( $this->id, $this->meta_field, true );
-			} else {
+			} elseif ( $this->type === 'taxonomy' ) {
 				$data = smartcrawl_get_term_meta( $this->object, $this->object->taxonomy, $this->social_meta );
 			}
 
@@ -38,13 +38,5 @@ abstract class Social {
 	public function clear_data() {
 		$this->data   = null;
 		$this->helper = null;
-	}
-
-	public function is_disabled() {
-		if ( isset( $this->data['disabled'] ) && $this->data['disabled'] ) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 }

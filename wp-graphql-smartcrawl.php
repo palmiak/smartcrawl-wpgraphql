@@ -8,7 +8,7 @@
  * Author URI:
  * Text Domain:     wp-graphql-smartcrawl
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         1.0.0
  *
  * @package         WP_Graphql_Smartcrawl
  */
@@ -107,12 +107,12 @@ class WP_Graphql_Smartcrawl {
 									'metaDesc'             => $post_seo->get_description(),
 									'metaRobotsNoindex'    => $post_seo->get_robots_noindex(),
 									'metaRobotsNofollow'   => $post_seo->get_robots_nofollow(),
-									'opengraphTitle'       => $opengraph->get_title( $post_seo->get_title() ),
-									'opengraphDescription' => $opengraph->get_description( $post_seo->get_description() ),
+									'opengraphTitle'       => $opengraph->get_title(),
+									'opengraphDescription' => $opengraph->get_description(),
 									'opengraphImage'       => $opengraph->get_images(),
 									'canonical'            => $post_seo->get_canonical(),
-									'twitterTitle'         => $twitter->get_title( $post_seo->get_title() ),
-									'twitterDescription'   => $twitter->get_description( $post_seo->get_description() ),
+									'twitterTitle'         => $twitter->get_title(),
+									'twitterDescription'   => $twitter->get_description(),
 									'twitterImage'         => $twitter->get_images(),
 									'twitterCard'          => $twitter->get_card_type(),
 									'focusKeywords'        => $post_seo->get_focus_keywords(),
