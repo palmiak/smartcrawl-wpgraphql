@@ -6,6 +6,7 @@ To use this plugin you'll need:
 - [SmartCrawl](https://wordpress.org/plugins/smartcrawl-seo/) or [SmartCrawl PRO](https://premium.wpmudev.org/project/smartcrawl-wordpress-seo/) - WordPress SEO checker, analyzer, and optimizer
 
 ## Usage
+For posts and post types:
 ```graphql
 query GET_POSTS {
   posts {
@@ -26,6 +27,37 @@ query GET_POSTS {
             sourceUrl
           }
           twitterTitle
+          twitterDescription
+          twitterImage {
+            sourceUrl
+          }
+          twitterCard
+          focusKeywords
+        }
+      }
+    }
+  }
+}
+```
+
+For taxonomies:
+```query GET_CATEGORIES {
+  categories {
+    edges {
+      node {
+       smartcrawl_seo{
+          title
+          metaDesc
+          metaRobotsNoindex
+          metaRobotsNofollow
+          opengraphTitle
+          opengraphDescription
+          canonical
+          opengraphImage {
+            sourceUrl
+          }
+          twitterTitle
+          twitterDescription
           twitterImage {
             sourceUrl
           }
