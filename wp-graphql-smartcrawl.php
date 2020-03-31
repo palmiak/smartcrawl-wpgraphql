@@ -17,7 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-require __DIR__ . '/vendor/autoload.php';
+require_once 'src/social.php';
+require_once 'src/options.php';
+require_once 'src/post_seo.php';
+require_once 'src/twitter.php';
+require_once 'src/opengraph.php';
 
 use WPGraphQL\AppContext;
 

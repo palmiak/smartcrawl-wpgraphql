@@ -41,7 +41,8 @@ query GET_POSTS {
 ```
 
 For taxonomies:
-```query GET_CATEGORIES {
+```graphql
+query GET_CATEGORIES {
   categories {
     edges {
       node {
@@ -70,7 +71,5 @@ For taxonomies:
 }
 ```
 
-## Notes
-It's not production ready yet, but if you're brave enough - give it a try :)
-
-This plugin is under development yet and some features are missing.
+## Contributions
+Big thanks to [Ashley Hitchcock](https://github.com/ashhitch) for inspiration.
